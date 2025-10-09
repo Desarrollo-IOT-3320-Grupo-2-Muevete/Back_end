@@ -1,0 +1,25 @@
+services:
+  - type: web
+
+    name: ecomovil-api
+
+    env: java
+    plan: free
+    buildCommand: "./mvnw package -DskipTests"
+    startCommand: "java -jar target/api-0.0.1-SNAPSHOT.jar"
+    healthCheckPath: /api/v1/authentication/sign-in
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: ecomovil-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: ecomovil-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: ecomovil-db
+          property: password
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
