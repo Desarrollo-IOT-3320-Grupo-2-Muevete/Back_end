@@ -1,9 +1,7 @@
 services:
   - type: web
-
     name: ecomovil-api
-
-    env: java
+    runtime: java # <-- CORRECCIÓN: Era 'env', ahora es 'runtime'
     plan: free
     buildCommand: "./mvnw package -DskipTests"
     startCommand: "java -jar target/api-0.0.1-SNAPSHOT.jar"
