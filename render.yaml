@@ -6,11 +6,11 @@ envVars:
   # El resto de las variables se toman directamente de la base de datos
   - key: SPRING_DATASOURCE_USERNAME
     fromDatabase:
-      name: ecomovil_db # Asegúrate que este nombre coincida con tu DB en Render
+      name: ecomovil-db # Asegúrate que este nombre coincida con tu DB en Render
       property: user
   - key: SPRING_DATASOURCE_PASSWORD
     fromDatabase:
-      name: ecomovil_db # Asegúrate que este nombre coincida con tu DB en Render
+      name: ecomovil-db # Asegúrate que este nombre coincida con tu DB en Render
       property: password
 
   # Añadimos estas líneas para forzar el uso de PostgreSQL
