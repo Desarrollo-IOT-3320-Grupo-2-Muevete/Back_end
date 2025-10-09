@@ -1,21 +1,24 @@
-services:
-  - type: web
-    name: ecomovil-api
-    runtime: docker
-    plan: free
-    healthCheckPath: /api/v1/authentication/sign-in
-    envVars:
-      - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: ecomovil-db
-          property: connectionString
-      - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: ecomovil-db
-          property: user
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: ecomovil-db
-          property: password
-      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
-        value: update
+envVars:
+  # Construimos la URL manualmente para añadir el prefijo "jdbc:"
+  - key: SPRING_DATASOURCE_URL
+    value: jdbc:postgresql://${ecomovil-db.host}/${ecomovil-db.database}
+
+  # El resto de las variables se toman directamente de la base de datos
+  - key: SPRING_DATASOURCE_USERNAME
+    fromDatabase:
+      name: ecomovil_db # Asegúrate que este nombre coincida con tu DB en Render
+      property: user
+  - key: SPRING_DATASOURCE_PASSWORD
+    fromDatabase:
+      name: ecomovil_db # Asegúrate que este nombre coincida con tu DB en Render
+      property: password
+
+  # Añadimos estas líneas para forzar el uso de PostgreSQL
+  - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+    value: org.postgresql.Driver
+  - key: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+    value: org.hibernate.dialect.PostgreSQLDialect
+
+  # Configuración de Hibernate
+  - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+    value: update
