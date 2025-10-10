@@ -7,7 +7,7 @@ services:
     envVars:
       # Construimos la URL manualmente para añadir "jdbc:"
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://${ecomovil-db.host}/${ecomovil-db.database}
+        value: jdbc:postgresql://dpg-d3k3q856ubrc73dlo5r0-a/ecomovil_db}
 
       # El resto se toma de la base de datos
       - key: SPRING_DATASOURCE_USERNAME
