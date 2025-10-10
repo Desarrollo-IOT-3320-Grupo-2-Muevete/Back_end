@@ -12,23 +12,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.util.AntPathMatcher; // <-- IMPORT AÑADIDO
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-/**
- * Bearer Authorization Request Filter.
- * <p>
- * This class is responsible for filtering requests and setting the user authentication.
- * It extends the OncePerRequestFilter class.
- * </p>
- * @see OncePerRequestFilter
- */
 public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BearerAuthorizationRequestFilter.class);
     private final BearerTokenService tokenService;
-
 
     @Qualifier("defaultUserDetailsService")
     private final UserDetailsService userDetailsService;
@@ -38,12 +30,6 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
 
-    /**
-     * This method is responsible for filtering requests and setting the user authentication.
-     * @param request The request object.
-     * @param response The response object.
-     * @param filterChain The filter chain object.
-     */
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
@@ -56,10 +42,22 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
             } else {
                 LOGGER.info("Token is not valid");
             }
-
         } catch (Exception e) {
             LOGGER.error("Cannot set user authentication: {}", e.getMessage());
         }
         filterChain.doFilter(request, response);
+    }
+
+    /**
+     * ESTE ES EL MÉTODO NUEVO Y CLAVE.
+     * Le dice a Spring Security que NO ejecute este filtro si la URL coincide con una ruta pública.
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        var publicPaths = new AntPathMatcher();
+        return publicPaths.match("/api/v1/authentication/**", request.getServletPath()) ||
+                publicPaths.match("/health", request.getServletPath()) ||
+                publicPaths.match("/v3/api-docs/**", request.getServletPath()) ||
+                publicPaths.match("/swagger-ui/**", request.getServletPath());
     }
 }
