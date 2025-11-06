@@ -3,7 +3,6 @@ databases:
     databaseName: ecomovil_db
     plan: free
 
-
 services:
   - type: web
     name: ecomovil-api
@@ -17,15 +16,8 @@ services:
           name: ecomovil-db
           property: connectionString
 
-      - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: ecomovil-db
-          property: user
 
-      - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: ecomovil-db
-          property: password
+
 
       - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
         value: org.postgresql.Driver
