@@ -1,16 +1,15 @@
 services:
-  - type: psql
+
+  - type: postgres
     name: ecomovil-db
     databaseName: ecomovil_db
     plan: free
-
 
   - type: web
     name: ecomovil-api
     runtime: docker
     plan: free
     healthCheckPath: /health
-
 
     envVars:
       - key: SPRING_DATASOURCE_URL
@@ -27,7 +26,6 @@ services:
         fromDatabase:
           name: ecomovil-db
           property: password
-
 
       - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
         value: org.postgresql.Driver
