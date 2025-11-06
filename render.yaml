@@ -1,28 +1,23 @@
 services:
-  # ----------------------------------------------------
-  # PASO 1: AÑADIMOS LA DEFINICIÓN DE LA BASE DE DATOS
-  # (Esta parte faltaba en tu archivo)
-  # ----------------------------------------------------
-  - type: psql
-    name: ecomovil-db       # Este es el nombre interno de la DB
-    databaseName: ecomovil_db  # El nombre de la base de datos en sí
-    plan: free                 # Importante: plan gratuito
 
-  # ----------------------------------------------------
-  # PASO 2: TU SERVICIO WEB, CON LA URL CORREGIDA
-  # ----------------------------------------------------
+  - type: psql
+    name: ecomovil-db
+    databaseName: ecomovil_db
+    plan: free
+
+
   - type: web
     name: ecomovil-api
     runtime: docker
     plan: free
-    healthCheckPath: /health # Esto está bien si usas Spring Actuator
+    healthCheckPath: /health
 
-    # --- LA CORRECCIÓN CRUCIAL ESTÁ AQUÍ ---
+
     envVars:
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
-          name: ecomovil-db       # <-- Le decimos que use la DB definida arriba
-          property: connectionString # <-- Render nos da la URL interna correcta
+          name: ecomovil-db
+          property: connectionString
 
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
@@ -34,12 +29,12 @@ services:
           name: ecomovil-db
           property: password
 
-      # Estas variables que tenías están perfectas
+
       - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
         value: org.postgresql.Driver
       - key: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
         value: org.hibernate.dialect.PostgreSQLDialect
       - key: SPRING_JPA_HIBERNATE_DDL_AUTO
         value: update
-      - key: JAVA_VERSION # Buena práctica para asegurar la versión de Java
+      - key: JAVA_VERSION
         value: 21
