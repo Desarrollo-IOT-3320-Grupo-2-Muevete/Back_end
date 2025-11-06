@@ -76,7 +76,7 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers(
                                 "/api/v1/authentication/**", // Ruta de Registro y Login
-                                "/health",                   // Ruta de chequeo de Render
+                                "/api/v1/health",                   // Ruta de chequeo de Render
                                 "/v3/api-docs/**",           // Rutas de Swagger (documentación)
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",

@@ -52,7 +52,7 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         var publicPaths = new AntPathMatcher();
         return publicPaths.match("/api/v1/authentication/**", request.getServletPath()) ||
-                publicPaths.match("/health", request.getServletPath()) ||
+                publicPaths.match("/api/v1/health", request.getServletPath()) ||
                 publicPaths.match("/v3/api-docs/**", request.getServletPath()) ||
                 publicPaths.match("/swagger-ui/**", request.getServletPath());
     }

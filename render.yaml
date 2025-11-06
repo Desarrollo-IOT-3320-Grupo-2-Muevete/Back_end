@@ -3,7 +3,7 @@ services:
     name: ecomovil-api
     runtime: docker
     plan: free
-    healthCheckPath: /health
+    healthCheckPath: /api/v1/health
     envVars:
       # Construimos la URL manualmente para añadir "jdbc:"
       - key: SPRING_DATASOURCE_URL
