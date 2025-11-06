@@ -1,5 +1,4 @@
 services:
-
   - type: psql
     name: ecomovil-db
     databaseName: ecomovil_db
