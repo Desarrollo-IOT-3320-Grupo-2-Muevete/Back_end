@@ -1,10 +1,10 @@
-services:
-
-  - type: postgres
-    name: ecomovil-db
+databases:
+  - name: ecomovil-db
     databaseName: ecomovil_db
     plan: free
 
+
+services:
   - type: web
     name: ecomovil-api
     runtime: docker
