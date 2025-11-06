@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.util.AntPathMatcher; // <-- IMPORT AÑADIDO
+import org.springframework.util.AntPathMatcher; // <-- ¡ASEGÚRATE DE TENER ESTE IMPORT!
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -48,10 +48,6 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    /**
-     * ESTE ES EL MÉTODO NUEVO Y CLAVE.
-     * Le dice a Spring Security que NO ejecute este filtro si la URL coincide con una ruta pública.
-     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         var publicPaths = new AntPathMatcher();
