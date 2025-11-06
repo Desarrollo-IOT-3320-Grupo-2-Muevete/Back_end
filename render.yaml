@@ -17,8 +17,6 @@ services:
           property: connectionString
 
 
-
-
       - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
         value: org.postgresql.Driver
       - key: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
