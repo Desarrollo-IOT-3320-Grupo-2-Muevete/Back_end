@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.util.AntPathMatcher; // <-- ¡ASEGÚRATE DE TENER ESTE IMPORT!
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -48,12 +48,15 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         var publicPaths = new AntPathMatcher();
-        return publicPaths.match("/api/v1/authentication/**", request.getServletPath()) ||
-                publicPaths.match("/api/v1/health", request.getServletPath()) ||
-                publicPaths.match("/v3/api-docs/**", request.getServletPath()) ||
-                publicPaths.match("/swagger-ui/**", request.getServletPath());
+        String path = request.getRequestURI();
+
+        return publicPaths.match("/api/v1/authentication/**", path) ||
+                publicPaths.match("/api/v1/health", path) ||
+                publicPaths.match("/v3/api-docs/**", path) ||
+                publicPaths.match("/swagger-ui/**", path);
     }
 }
