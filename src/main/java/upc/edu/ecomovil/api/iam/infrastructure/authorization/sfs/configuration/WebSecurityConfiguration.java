@@ -7,7 +7,7 @@ import upc.edu.ecomovil.api.iam.infrastructure.tokens.jwt.BearerTokenService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod; // 👈 IMPORTANTE: Añadir esta importación
+import org.springframework.http.HttpMethod; // Asegúrate que esté esta importación
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -76,20 +76,18 @@ public class WebSecurityConfiguration {
                 .sessionManagement( customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         // 👇 **INICIO DE LA CORRECCIÓN**
-                        // 1. Permitir TODAS las solicitudes OPTIONS (para preflight de CORS)
+                        // Ser MUY explícito con las rutas públicas, una por una.
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/api/v1/authentication/**").permitAll()
+                        .requestMatchers("/api/v1/health/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-resources/**").permitAll()
+                        .requestMatchers("/webjars/**").permitAll()
 
-                        // 2. Definir todas las rutas públicas
-                        .requestMatchers(
-                                "/api/v1/authentication/**", // Ruta de Registro y Login
-                                "/api/v1/health/**",         // Ruta de chequeo de Render (hecha más robusta)
-                                "/v3/api-docs/**",           // Rutas de Swagger (documentación)
-                                "/swagger-ui/**",
-                                "/swagger-resources/**",
-                                "/webjars/**").permitAll()
-                        // 3. Exigir autenticación para todas las demás rutas
-                        // 👆 **FIN DE LA CORRECCIÓN**
+                        // CUALQUIER OTRA COSA requiere autenticación
                         .anyRequest().authenticated());
+        // 👆 **FIN DE LA CORRECCIÓN**
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class);

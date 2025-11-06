@@ -55,14 +55,18 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // 👇 **INICIO DE LA CORRECCIÓN**
-        // Sincronizar esta lista para que coincida 1:1 con las reglas .permitAll()
-        // de WebSecurityConfiguration.
-        return publicPaths.match("/api/v1/authentication/**", path) ||
-                publicPaths.match("/api/v1/health/**", path) || // Ruta de Render (más robusta)
-                publicPaths.match("/v3/api-docs/**", path) ||   // Swagger
-                publicPaths.match("/swagger-ui/**", path) ||    // Swagger
-                publicPaths.match("/swagger-resources/**", path) || // Swagger (Faltaba)
-                publicPaths.match("/webjars/**", path);             // Swagger (Faltaba)
+        // Mantenemos la lista sincronizada
+        boolean shouldNotFilter = publicPaths.match("/api/v1/authentication/**", path) ||
+                publicPaths.match("/api/v1/health/**", path) ||
+                publicPaths.match("/v3/api-docs/**", path) ||
+                publicPaths.match("/swagger-ui/**", path) ||
+                publicPaths.match("/swagger-resources/**", path) ||
+                publicPaths.match("/webjars/**", path);
+
+        // AÑADIMOS ESTE LOG DE DEPURACIÓN
+        LOGGER.info("shouldNotFilter check for path: {}. Result: {}", path, shouldNotFilter);
+
+        return shouldNotFilter;
         // 👆 **FIN DE LA CORRECCIÓN**
     }
 }
