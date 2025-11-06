@@ -7,6 +7,7 @@ import upc.edu.ecomovil.api.iam.infrastructure.tokens.jwt.BearerTokenService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod; // 👈 IMPORTANTE: Añadir esta importación
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -74,14 +75,21 @@ public class WebSecurityConfiguration {
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedRequestHandler))
                 .sessionManagement( customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        // 👇 **INICIO DE LA CORRECCIÓN**
+                        // 1. Permitir TODAS las solicitudes OPTIONS (para preflight de CORS)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // 2. Definir todas las rutas públicas
                         .requestMatchers(
                                 "/api/v1/authentication/**", // Ruta de Registro y Login
-                                "/api/v1/health",                   // Ruta de chequeo de Render
+                                "/api/v1/health/**",         // Ruta de chequeo de Render (hecha más robusta)
                                 "/v3/api-docs/**",           // Rutas de Swagger (documentación)
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
                                 "/webjars/**").permitAll()
-                        .anyRequest().authenticated()); // Todas las demás rutas SÍ requieren autenticación
+                        // 3. Exigir autenticación para todas las demás rutas
+                        // 👆 **FIN DE LA CORRECCIÓN**
+                        .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class);

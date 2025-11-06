@@ -54,9 +54,15 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
         var publicPaths = new AntPathMatcher();
         String path = request.getRequestURI();
 
+        // 👇 **INICIO DE LA CORRECCIÓN**
+        // Sincronizar esta lista para que coincida 1:1 con las reglas .permitAll()
+        // de WebSecurityConfiguration.
         return publicPaths.match("/api/v1/authentication/**", path) ||
-                publicPaths.match("/api/v1/health", path) ||
-                publicPaths.match("/v3/api-docs/**", path) ||
-                publicPaths.match("/swagger-ui/**", path);
+                publicPaths.match("/api/v1/health/**", path) || // Ruta de Render (más robusta)
+                publicPaths.match("/v3/api-docs/**", path) ||   // Swagger
+                publicPaths.match("/swagger-ui/**", path) ||    // Swagger
+                publicPaths.match("/swagger-resources/**", path) || // Swagger (Faltaba)
+                publicPaths.match("/webjars/**", path);             // Swagger (Faltaba)
+        // 👆 **FIN DE LA CORRECCIÓN**
     }
 }
