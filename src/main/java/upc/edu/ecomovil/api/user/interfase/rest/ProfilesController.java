@@ -107,14 +107,28 @@ public class ProfilesController {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
 
-        // Carga el perfil del user autenticado
         var profileOptional = profileRepository.findById(user.getId());
         if (profileOptional.isEmpty()) return ResponseEntity.notFound().build();
 
         Profile profile = profileOptional.get();
-        profile.updateName(resource.firstName(), resource.lastName());
-        profile.updateEmail(resource.email());
-        profile.updatePhoneNumber(resource.phoneNumber());
+
+
+        if (resource.firstName() != null && !resource.firstName().isBlank() &&
+                resource.lastName() != null && !resource.lastName().isBlank()) {
+            profile.updateName(resource.firstName(), resource.lastName());
+        }
+
+        if (resource.email() != null && !resource.email().isBlank()) {
+            profile.updateEmail(resource.email());
+        }
+
+        if (resource.phoneNumber() != null && !resource.phoneNumber().isBlank()) {
+            profile.updatePhoneNumber(resource.phoneNumber());
+        }
+
+        if (resource.ruc() != null && !resource.ruc().isBlank()) {
+            profile.updateRuc(resource.ruc());
+        }
 
         var savedProfile = profileRepository.save(profile);
         var profileResource = ProfileResourceFromEntityAssembler.toResourceFromEntity(savedProfile);
