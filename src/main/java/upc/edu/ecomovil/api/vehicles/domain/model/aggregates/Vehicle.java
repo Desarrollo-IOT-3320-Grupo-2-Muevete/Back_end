@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
+import lombok.Setter; // 👈 IMPORTANTE: Añadimos esto
 import upc.edu.ecomovil.api.plan2.domain.model.aggregates.Plan2;
 import upc.edu.ecomovil.api.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import upc.edu.ecomovil.api.user.domain.model.aggregates.Profile;
@@ -38,9 +39,11 @@ public class Vehicle extends AuditableAbstractAggregateRoot<Vehicle> {
     private String ImageUrl;
 
     @Getter
+    @Setter // 👈 Añadido para que el simulador pueda actualizar la latitud
     private Float lat; //latitud
 
     @Getter
+    @Setter // 👈 Añadido para que el simulador pueda actualizar la longitud
     private Float lng; //longitud
 
     @Getter
@@ -91,6 +94,8 @@ public class Vehicle extends AuditableAbstractAggregateRoot<Vehicle> {
         this.ImageUrl = imageUrl;
     }
 
+    // Ya no necesitas estos métodos manuales updateLat/updateLng si usas @Setter,
+    // pero los dejamos por si acaso los usas en otro lado.
     public void updateLat(Float lat){
         this.lat = lat;
     }
