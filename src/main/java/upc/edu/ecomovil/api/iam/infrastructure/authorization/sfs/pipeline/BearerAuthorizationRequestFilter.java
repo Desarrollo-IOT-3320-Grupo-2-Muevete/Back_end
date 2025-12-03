@@ -58,6 +58,7 @@ public class BearerAuthorizationRequestFilter extends OncePerRequestFilter {
         // Mantenemos la lista sincronizada
         boolean shouldNotFilter = publicPaths.match("/api/v1/authentication/**", path) ||
                 publicPaths.match("/api/v1/health/**", path) ||
+                publicPaths.match("/api/v1/iot/**", path) ||
                 publicPaths.match("/v3/api-docs/**", path) ||
                 publicPaths.match("/swagger-ui/**", path) ||
                 publicPaths.match("/swagger-resources/**", path) ||
